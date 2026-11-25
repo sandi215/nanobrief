@@ -98,8 +98,10 @@ export function getModel(modeKey = "preferOnDevice") {
   model = getGenerativeModel(ai, {
     mode,
     inCloudParams: {
-      // Cloud fallback model is the SDK default (gemini-3.5-flash-lite in
-      // JS SDK v13+). Override here only if a different model is needed.
+      // Cloud fallback model. MUST be set explicitly: the SDK only applies
+      // its default (gemini-3.5-flash-lite) when inCloudParams is omitted
+      // entirely; passing inCloudParams without `model` throws AI/no-model.
+      model: "gemini-3.5-flash-lite",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: briefSchema,
