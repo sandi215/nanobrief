@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NanoBrief — private summaries, on-device first</title>
+  <meta name="description" content="Paste any text. NanoBrief summarizes it on-device with Gemini Nano 4 when available, and falls back to the cloud via Firebase AI Logic." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>Nano<span>Brief</span></h1>
+      <p class="tagline">Private summaries, on-device first.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="configBanner" class="banner" hidden>
+      <strong>Firebase is not configured yet.</strong>
+      Copy <code>.env.example</code> to <code>.env</code> and fill in your Firebase
+      web app values (see README). The UI below still works for preview, but
+      Summarize needs a configured project.
+    </div>
+
+    <section class="card">
+      <div class="row between">
+        <span id="nanoPill" class="pill">Checking Gemini Nano…</span>
+        <span id="appcheckNote" class="muted small"></span>
+      </div>
+
+      <label for="input" class="label">Text to summarize</label>
+      <textarea id="input" rows="9" placeholder="Paste an article, meeting notes, a long message — anything. Your text is summarized on-device when Gemini Nano is available, so it never has to leave your computer."></textarea>
+      <div class="row between">
+        <span id="count" class="muted small">0 characters</span>
+        <span>
+          <button id="sampleBtn" class="btn ghost" type="button">Try a sample</button>
+          <button id="clearBtn" class="btn ghost" type="button">Clear</button>
+        </span>
+      </div>
+
+      <div class="controls">
+        <div>
+          <span class="label">Length</span>
+          <div class="pills">
+            <button type="button" data-length="short" class="pill-btn">Short</button>
+            <button type="button" data-length="medium" class="pill-btn active">Medium</button>
+            <button type="button" data-length="detailed" class="pill-btn">Detailed</button>
+          </div>
+        </div>
+        <div>
+          <label class="label" for="modeSelect">Routing (Firebase AI Logic)</label>
+          <select id="modeSelect">
+            <option value="preferOnDevice" selected>Prefer on-device, cloud fallback</option>
+            <option value="preferInCloud">Prefer cloud, on-device fallback</option>
+            <option value="onlyOnDevice">On-device only</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="summarizeBtn" class="btn primary big" type="button" disabled>Summarize</button>
+      <p id="hint" class="muted small"></p>
+
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+        <p id="progressLabel" class="muted small"></p>
+      </div>
+
+      <p id="status" class="status"></p>
+    </section>
+
+    <section id="result" class="card" hidden></section>
+
+    <section class="card">
+      <h2>Recent summaries</h2>
+      <p class="muted small">Stored only in this browser (localStorage). Nothing is uploaded.</p>
+      <div id="history"></div>
+    </section>
+
+    <footer class="muted small">
+      All AI inference runs through Firebase AI Logic (hybrid: Gemini Nano 4
+      on-device via Chrome's Prompt API, cloud Gemini fallback). No other model
+      API is called. App Check protects the Gemini API key.
+      Built for #BuildHybridAI 2026.
+    </footer>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
